@@ -1,4 +1,4 @@
-const POST_ROOT = './post'; 
+const POST_ROOT = './post';
 
 const DEFAULT_FILE_INDEX = [
     {
@@ -7,56 +7,7 @@ const DEFAULT_FILE_INDEX = [
         "children": [
             "文本标记.md",
             "图像标记.md",
-            "超链接标记.md",
-            "列表标记.md",
-            "音频.md",
-            "视频.md",
-            "结构化标记.md",
-            "表单.md"
-        ]
-    },
-    {
-        "name": "CSS",
-        "type": "folder",
-        "children": [
-            "简介.md",
-            "引入.md",
-            "选择器.md",
-            "优先级.md",
-            "关系选择器.md",
-            "伪类选择器.md",
-            "字体.md",
-            "背景.md",
-            "定位与布局.md",
-            "浮动.md",
-            "外边距塌陷与 BFC.md",
-            "变形.md",
-            "过渡.md",
-            "动画.md"
-        ]
-    },
-    {
-        "name": "JavaScript",
-        "type": "folder",
-        "children": [
-            "JavaScript.md"
-        ]
-    },
-    {
-        "name": "Misc",
-        "type": "folder",
-        "children": [
-            "Canvas.md",
-            "matterjs.md",
-            "Paper.md",
-            "threejs.md"
-        ]
-    },
-    {
-        "name": "Util",
-        "type": "folder",
-        "children": [
-            "File Tool.md"
+            "超链接标记.md"
         ]
     },
     "README.md"
@@ -90,8 +41,15 @@ const dom = {
     sidebar: document.getElementById('sidebar'),
     overlay: document.getElementById('mobile-overlay'),
     customCssStyle: document.getElementById('dynamic-user-css'),
-    customCssInput: document.getElementById('custom-css-input')
+    customCssInput: document.getElementById('custom-css-input'),
+    highlightStyleLink: document.getElementById('highlight-style') // 获取高亮样式链接标签
 };
+
+
+marked.setOptions({
+    breaks: true,
+    gfm: true
+});
 
 async function init() {
     let dataToRender = DEFAULT_FILE_INDEX;
@@ -100,10 +58,10 @@ async function init() {
         const response = await fetch('./FileConfig.json');
         if (response.ok) {
             dataToRender = await response.json();
-            console.log('成功加载外部配置文件FileConfig.json');
+            console.log('成功加载外部配置文件 FileConfig.json');
         }
     } catch (e) {
-        console.warn('使用内置默认配置。');
+        console.warn('无法加载 FileConfig.json，使用内置默认配置。');
     }
 
     const appData = buildTree(dataToRender, POST_ROOT);
@@ -114,6 +72,7 @@ async function init() {
         dom.customCssInput.value = savedCss;
         applyCustomCSS();
     }
+
 
     const readmeNode = appData.find(node => node.name === 'README.md');
     if (readmeNode) {
@@ -136,17 +95,18 @@ async function init() {
                 </div>
                 <h2 class="text-xl font-bold mb-2 text-gray-700 dark:text-gray-200">开始记录</h2>
                 <p class="mb-6 max-w-sm mx-auto text-sm text-gray-500 dark:text-gray-400">
-                    从左侧目录选择笔记。<br>未找到默认 README.md 文件。
+                    请在左侧选择文档。<br>配置文件: FileConfig.json
                 </p>
             </div>
         `;
     }
 }
 
+// 渲染侧边栏
 function renderSidebar(nodes, container, level = 0, pathPrefix = []) {
-    const basePadding = 0.8; 
-    const indentStep = 0.8; 
-    
+    const basePadding = 0.8;
+    const indentStep = 0.8;
+
     nodes.forEach(node => {
         const itemDiv = document.createElement('div');
         const currentPath = [...pathPrefix, node.name];
@@ -156,14 +116,14 @@ function renderSidebar(nodes, container, level = 0, pathPrefix = []) {
             const header = document.createElement('div');
             header.className = 'tree-item folder-header select-none';
             header.style.paddingLeft = `${paddingLeft}rem`;
-            
+
             header.innerHTML = `
                 <span class="truncate flex-1">${node.name}</span>
                 <i class="fas fa-chevron-right folder-arrow"></i>
             `;
             const childrenContainer = document.createElement('div');
             childrenContainer.className = 'folder-content';
-            
+
             header.onclick = () => {
                 const isOpen = childrenContainer.classList.toggle('open');
                 const arrow = header.querySelector('.folder-arrow');
@@ -176,16 +136,16 @@ function renderSidebar(nodes, container, level = 0, pathPrefix = []) {
             itemDiv.appendChild(header);
             itemDiv.appendChild(childrenContainer);
             container.appendChild(itemDiv);
-            
+
             renderSidebar(node.children, childrenContainer, level + 1, currentPath);
         } else {
             const fileEl = document.createElement('div');
             fileEl.className = 'tree-item text-sm';
             fileEl.style.paddingLeft = `${paddingLeft}rem`;
             const displayName = node.name.replace(/\.md$/, '');
-            
+
             fileEl.innerHTML = `<span class="truncate">${displayName}</span>`;
-            
+
             fileEl.onclick = () => {
                 document.querySelectorAll('.tree-item').forEach(el => el.classList.remove('active'));
                 fileEl.classList.add('active');
@@ -199,7 +159,7 @@ function renderSidebar(nodes, container, level = 0, pathPrefix = []) {
 
 function generateTOC() {
     const headers = dom.markdownRender.querySelectorAll('h1, h2, h3');
-    dom.tocContent.innerHTML = ''; 
+    dom.tocContent.innerHTML = '';
 
     if (headers.length === 0) {
         dom.tocContent.innerHTML = '<p class="text-sm text-gray-400 italic">暂无目录</p>';
@@ -222,7 +182,7 @@ function generateTOC() {
         link.href = '#' + id;
         link.textContent = header.textContent;
         link.className = 'toc-link';
-        
+
         const tagName = header.tagName.toLowerCase();
         if (tagName === 'h1') link.classList.add('toc-h1');
         else if (tagName === 'h2') link.classList.add('toc-h2');
@@ -236,7 +196,7 @@ function generateTOC() {
         dom.tocContent.appendChild(link);
     });
 
-     if (!hasValidHeader) {
+    if (!hasValidHeader) {
         dom.tocContent.innerHTML = '<p class="text-sm text-gray-400 italic">暂无目录</p>';
     }
 }
@@ -245,18 +205,48 @@ function openFile(node, pathArray) {
     const breadcrumbPath = pathArray.map(p => p.replace(/\.md$/, ''));
     dom.breadcrumb.innerHTML = breadcrumbPath.join(' <span class="mx-1 opacity-30">/</span> ');
     dom.markdownRender.innerHTML = `<div class="flex h-full items-center justify-center text-gray-400"><i class="fas fa-circle-notch fa-spin text-3xl text-primary opacity-50"></i></div>`;
-    dom.tocContent.innerHTML = ''; 
+    dom.tocContent.innerHTML = '';
 
     fetch(node.path)
         .then(response => {
             if (!response.ok) throw new Error(`无法读取文件 (HTTP ${response.status})`);
             return response.text();
         })
-        .then(text => {
-            const htmlContent = marked.parse(text);
+        .then(async text => {
+            let htmlContent = marked.parse(text);
+            if (htmlContent instanceof Promise) {
+                htmlContent = await htmlContent;
+            }
+
             dom.markdownRender.innerHTML = htmlContent;
             dom.contentArea.scrollTop = 0;
-            
+
+            // 手动触发代码高亮，并提取语言
+            dom.markdownRender.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+
+                const className = block.className;
+                const match = className.match(/language-([a-z0-9+-]+)/i);
+
+                if (match && match[1]) {
+                    let lang = match[1].toLowerCase();
+
+                    const langMap = {
+                        'csharp': 'c#',
+                        'cpp': 'c++',
+                        'cplusplus': 'c++',
+                        'fsharp': 'f#',
+                        'vbnet': 'vb.net'
+                    };
+
+                    if (langMap[lang]) {
+                        lang = langMap[lang];
+                    }
+
+                    block.parentElement.setAttribute('data-lang', lang);
+                }
+            });
+
             generateTOC();
         })
         .catch(err => {
@@ -294,7 +284,13 @@ document.getElementById('close-sidebar').onclick = () => toggleSidebar(false);
 dom.overlay.onclick = () => toggleSidebar(false);
 
 function toggleTheme() {
-    document.documentElement.classList.toggle('dark');
+    const isDark = document.documentElement.classList.toggle('dark');
+
+    if (isDark) {
+        dom.highlightStyleLink.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark-dimmed.min.css";
+    } else {
+        dom.highlightStyleLink.href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css";
+    }
 }
 
 document.getElementById('settings-toggle').onclick = () => toggleSettings(true);
