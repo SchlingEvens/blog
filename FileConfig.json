@@ -46,7 +46,8 @@
       "name": "DevLog",
       "type": "folder",
       "children": [
-            "Web前端设计结课作业.md"
+            "Web前端设计结课作业.md",
+            "UnbraCore.md"
       ]
     },
     "README.md"
