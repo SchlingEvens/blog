@@ -44,15 +44,8 @@
         "name": "Unity",
         "type": "folder",
         "children": [
-            "Unity基础实践：跟随摄像头.md"
+            "Unity基础实践-跟随摄像头.md"
         ]
-    },
-    {
-      "name": "DevLog",
-      "type": "folder",
-      "children": [
-            "Web前端设计结课作业.md"
-      ]
     },
     {
         "name": "Misc",
@@ -70,6 +63,13 @@
         "children": [
             "File Tool.md"
         ]
+    },
+    {
+      "name": "DevLog",
+      "type": "folder",
+      "children": [
+            "Web前端设计结课作业.md"
+      ]
     },
     "README.md"
 ]
