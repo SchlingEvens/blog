@@ -39,7 +39,8 @@
         "name": "Util",
         "type": "folder",
         "children": [
-            "File Tool.md"
+            "File Tool.md",
+            "Asset Tool.md"
         ]
     },
     {
