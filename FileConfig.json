@@ -1,43 +1,13 @@
 [
     {
-        "name": "HTML5",
+        "name": "Web",
         "type": "folder",
         "children": [
-            "文本标记.md",
-            "图像标记.md",
-            "超链接标记.md",
-            "列表标记.md",
-            "音频.md",
-            "视频.md",
-            "结构化标记.md",
-            "表单.md"
-        ]
-    },
-    {
-        "name": "CSS",
-        "type": "folder",
-        "children": [
-            "简介.md",
-            "引入.md",
-            "选择器.md",
-            "优先级.md",
-            "关系选择器.md",
-            "伪类选择器.md",
-            "字体.md",
-            "背景.md",
-            "定位与布局.md",
-            "浮动.md",
-            "外边距塌陷与 BFC.md",
-            "变形.md",
-            "过渡.md",
-            "动画.md"
-        ]
-    },
-    {
-        "name": "JavaScript",
-        "type": "folder",
-        "children": [
-            "JavaScript.md"
+            "Web.md",
+            "Canvas.md",
+            "matterjs.md",
+            "Paper.md",
+            "threejs.md"
         ]
     },
     {
@@ -51,10 +21,18 @@
         "name": "Misc",
         "type": "folder",
         "children": [
-            "Canvas.md",
-            "matterjs.md",
-            "Paper.md",
-            "threejs.md"
+          {
+            "name": "备赛笔记（杂）",
+            "type": "folder",
+            "children": [
+              "【动态规划】【区间dp】四边形优化.md",
+              "【动态规划】【混合背包】二进制分组优化.md",
+              "【字符串】KMP算法.md",
+              "【数论】分解质因数.md",
+              "【质数筛】埃式筛.md",
+              "【质数筛】欧拉筛.md"
+            ]
+          }
         ]
     },
     {
