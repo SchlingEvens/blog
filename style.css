@@ -1,4 +1,4 @@
-
+/* 定义 CSS 变量接口 */
 :root {
     --primary-color: #3b82f6;
     --bg-color: #ffffff;
@@ -12,9 +12,7 @@
     --heading-font-family: system-ui, sans-serif;
     --app-max-width: 1380px;
 
-    /* 白天模式：代码块背景偏灰 */
     --code-bg: #f3f4f6;
-    /* 代码语言标签背景 */
     --code-lang-bg: #e5e7eb;
 }
 
@@ -26,14 +24,13 @@
     --sidebar-bg: #1f2937;
     --border-color: #374151;
 
-    /* 夜间模式：代码块背景纯黑 */
     --code-bg: #000000;
-    /* 代码语言标签背景 */
     --code-lang-bg: #374151;
 }
 
 body {
-    background-color: #f3f4f6;
+    /* 背景色稍微深一点点，突出中间的内容卡片 */
+    background: linear-gradient(135deg, #f0f2f5 0%, #e2e8f0 100%);
     color: var(--text-color);
     font-size: var(--base-font-size);
     transition: background-color 0.3s, color 0.3s;
@@ -42,10 +39,24 @@ body {
     justify-content: center;
     height: 100vh;
     width: 100vw;
+    position: relative;
 }
 
 .dark body {
-    background-color: #000000;
+    background: linear-gradient(135deg, #0f172a 0%, #000000 100%);
+}
+
+/* --- 修改：Canvas 位于最上层 --- */
+#background-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 关键：z-index 设高，确保在所有内容之上 */
+    z-index: 100;
+    /* 关键：允许鼠标事件穿透，这样您可以点击下面的笔记和按钮 */
+    pointer-events: none;
 }
 
 /* 应用主容器 */
@@ -55,9 +66,10 @@ body {
     max-width: var(--app-max-width);
     display: flex;
     background-color: var(--bg-color);
-    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    box-shadow: 0 0 50px rgba(0,0,0,0.1);
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 
 /* 侧边栏样式 */
@@ -98,8 +110,7 @@ body {
 .markdown-body ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.2em; }
 .markdown-body ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1.2em; }
 
-/* --- 代码块样式优化 --- */
-
+/* 代码块样式优化 */
 .markdown-body pre {
     background-color: var(--code-bg) !important;
     padding: 1.2rem;
@@ -111,7 +122,6 @@ body {
     position: relative;
 }
 
-/* code 标签 (块级) */
 .markdown-body pre code.hljs {
     background: transparent !important;
     padding: 0;
@@ -119,7 +129,6 @@ body {
     font-size: 0.9em;
 }
 
-/* 行内代码 */
 .markdown-body p code,
 .markdown-body li code,
 .markdown-body h1 code,
@@ -133,7 +142,7 @@ body {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* --- 代码块右上角语言显示 --- */
+/* 代码块右上角语言显示 */
 .markdown-body pre[data-lang]::after {
     content: attr(data-lang);
     position: absolute;
@@ -152,12 +161,11 @@ body {
     font-weight: 600;
 }
 
-/* 鼠标悬停时显示 */
 .markdown-body pre:hover[data-lang]::after {
     opacity: 1;
 }
 
-/* --- 超链接样式 --- */
+/* 超链接样式 */
 .markdown-body a {
     color: var(--primary-color);
     text-decoration: none;
@@ -171,7 +179,6 @@ body {
     border-bottom-color: var(--primary-color);
 }
 
-/* 引用块 */
 .markdown-body blockquote {
     border-left: 4px solid var(--primary-color);
     background: rgba(125,125,125,0.05);
@@ -182,7 +189,6 @@ body {
 }
 .dark .markdown-body blockquote { color: #9ca3af; }
 
-/* 图片 */
 .markdown-body img {
     max-width: 100%;
     border-radius: 0.5rem;
@@ -196,7 +202,6 @@ body {
     margin: 2em 0;
 }
 
-/* 折叠代码块样式 */
 .markdown-body details {
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
@@ -250,9 +255,7 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
 /* 文件夹列表 */
-.folder-content {
-    display: none;
-}
+.folder-content { display: none; }
 .folder-content.open { display: block; }
 
 .tree-item {
